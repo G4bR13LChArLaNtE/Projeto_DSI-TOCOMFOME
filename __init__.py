@@ -81,4 +81,4 @@ from Produto import Controler
 
 
 
-app = Flask(__name__)
+api = Flask(__name__)
