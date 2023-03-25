@@ -77,7 +77,7 @@ class Model_Cliente():
         for i in cliente:
             if i['id'] == id_cliente:
                 sql = '''
-                Delete from cliente where id = {};
+                Delete from cliente where cpf = {};
                 '''.format(id_cliente)
                 inserir_db(sql)
                 return 'Cliente excluido com sucesso!'
@@ -89,7 +89,7 @@ class Model_Cliente():
     def atualizar_cliente(id_cliente, usuario, endereco, telefone, email):
         sql = '''
         UPDATE cliente SET usuario='{}', endereço='{}', telefone='{}', email='{}'
-        WHERE id={};
+        WHERE cpf={};
         '''.format(usuario, endereco, telefone, email, id_cliente)
         inserir_db(sql)
         return 'Atualizado com sucesso!'
@@ -115,7 +115,7 @@ class Model_Cliente():
                 return 'Esse id não pertence a lista de lojas!'
         sql = '''
         UPDATE loja SET nota='{}'
-        WHERE id={};
+        WHERE cpf={};
         '''.format(novaNota, id_loja)
         inserir_db(sql)
         return 'Obrigado pela sua avaliação!'

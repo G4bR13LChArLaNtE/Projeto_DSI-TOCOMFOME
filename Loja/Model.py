@@ -42,7 +42,6 @@ class Model_Loja():
             l = {"id": i[0], "nome": i[1], "descricao": i[2], "logo": i[3], "endereco": i[4],"horario_func": i[5], "nota": i[6]}
             lojas.append(l)
             id_vendedor = i[7]
-            id_vendedor = int(id_vendedor)
             sql = "SELECT * FROM VENDEDOR WHERE CPF = '{}'".format(id_vendedor)
             v = {}
             result = consultar_db(sql)
@@ -97,7 +96,7 @@ class Model_Loja():
         for i in loja:
             if i['id'] == id_loja:
                 sql = '''
-                Delete from loja where id = {};
+                Delete from loja where id_loja = {};
                 '''.format(id_loja)
                 inserir_db(sql)
                 return 'Loja excluido com sucesso!'
@@ -110,7 +109,7 @@ class Model_Loja():
         sql = '''
         UPDATE vendedor SET
         nome='{}', descricao='{}', logo='{}', endereco='{}', horario='{}'
-        WHERE id={};
+        WHERE id_loja={};
         '''.format(nome, descricao, logo, endereco, horario_func, id_loja)
         inserir_db(sql)
         return 'Atualizado com sucesso!'

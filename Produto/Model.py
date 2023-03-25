@@ -7,7 +7,7 @@ from Projeto_DSI import *
 
 class PRODUTO(Base):
     __tablename__ = 'PRODUTO'
-    id = Column('IDPRODUTO', Integer, primary_key=True, autoincrement=True)
+    id = Column('ID_PRODUTO', Integer, primary_key=True, autoincrement=True)
     nome = Column('NOME', String(255), nullable=False)
     descricao = Column('DESCRICAO', String(255), nullable=True)
     imagem = Column('IMAGEM', String(255), nullable=False)
@@ -81,7 +81,7 @@ class Model_Produto():
         for i in produto:
             if i['id'] == id_produto:
                 sql = '''
-                Delete from produto where id = {};
+                Delete from produto where id_produto = {};
                 '''.format(id_produto)
                 inserir_db(sql)
                 return 'Produto excluido com sucesso!'
@@ -93,7 +93,7 @@ class Model_Produto():
     def atualizar_produto(id_produto, nome, descricao, imagem, qtdProduto, valor, id_categoria):
         sql = '''
         UPDATE produto SET nome='{}', descricao='{}', imagem='{}', qtdProduto='{}', valor='{}', id_categoria='{}'
-        WHERE id={};
+        WHERE id_produto={};
         '''.format(nome, descricao, imagem, qtdProduto, valor, id_categoria, id_produto)
         inserir_db(sql)
         return 'Atualizado com sucesso!'

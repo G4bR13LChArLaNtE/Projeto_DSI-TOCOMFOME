@@ -76,7 +76,7 @@ class Model_Categoria():
         for i in categoria:
             if i['id'] == id_categoria:
                 sql = '''
-                Delete from categoria where id = {};
+                Delete from categoria where id_categoria = {};
                 '''.format(id_categoria)
                 inserir_db(sql)
                 return 'Categoria excluida com sucesso!'
@@ -88,7 +88,7 @@ class Model_Categoria():
     def atualizar_categoria(id_categoria, nome):
         sql = '''
         UPDATE categoria SET nome'{}'
-        WHERE id={};
+        WHERE id_categoria={};
         '''.format(nome, id_categoria)
         inserir_db(sql)
         return 'Atualizado com sucesso!'

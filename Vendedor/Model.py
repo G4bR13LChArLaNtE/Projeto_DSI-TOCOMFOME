@@ -77,7 +77,7 @@ class Model_Vendedor():
         for i in vendedor:
             if i['id'] == id_vendedor:
                 sql = '''
-                Delete from vendedor where id = {};
+                Delete from vendedor where cpf = {};
                 '''.format(id_vendedor)
                 inserir_db(sql)
                 return 'Vendedor excluido com sucesso!'
@@ -89,7 +89,7 @@ class Model_Vendedor():
     def atualizar_vendedor(id_vendedor, usuario, telefone, email):
         sql = '''
         UPDATE vendedor SET usuario='{}', telefone='{}', email='{}'
-        WHERE id={};
+        WHERE cpf={};
         '''.format(usuario, telefone, email, id_vendedor)
         inserir_db(sql)
         return 'Atualizado com sucesso!'
