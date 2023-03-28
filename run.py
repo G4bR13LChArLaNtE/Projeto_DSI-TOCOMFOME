@@ -1,4 +1,4 @@
-from TOCOMFOME import app
+from tocomfome import app
 
 
 

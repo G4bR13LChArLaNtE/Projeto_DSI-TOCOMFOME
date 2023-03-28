@@ -1,4 +1,4 @@
-from TOCOMFOME import *
+from tocomfome import *
 
 
 

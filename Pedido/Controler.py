@@ -1,5 +1,5 @@
-from TOCOMFOME import *
-from Model import *
+from tocomfome import *
+from Model import Model_Pedido
 
 
 

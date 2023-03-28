@@ -21,13 +21,15 @@ senha = os.environ.get('PASS')
 
 server = 'CHARLANTEPC\SQLEXPRESS' # to specify an alternate port
 database = 'APP_TOCOMFOME'
-username = 'CHARLANTE\skydr'
-password = ''
+
 
 
 
 def conectar_db():
-    con = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    con = pyodbc.connect('DRIVER={SQL Server};' +
+                         'SERVER='+server+';' +
+                         'DATABASE='+database+';'+
+                         'Trusted_Connection=yes;')
     return con
 
 
@@ -71,14 +73,15 @@ def consultar_db(sql):
         cur.close()
 
 
-from Cliente import Controler, Model
-from Vendedor import Controler, Model
-from Categoria import Controler, Model
-from Loja import Controler, Model
-from Produto import Controler, Model
 
-
-
+import Categoria.Controler
+import Cliente.Controler
+import Entregador.Controler
+import Estoque.Controler
+import Loja.Controler
+import Pedido.Controler
+import Produto.Controler
+import Vendedor.Controler
 
 
 app = Flask(__name__)

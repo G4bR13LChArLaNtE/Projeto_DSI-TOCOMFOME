@@ -1,6 +1,6 @@
-from TOCOMFOME import *
+from tocomfome import *
 
-from TOCOMFOME import Pedido
+from tocomfome import Pedido
 
 
 # Classe Entregador:
