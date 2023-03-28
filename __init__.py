@@ -71,14 +71,15 @@ def consultar_db(sql):
         cur.close()
 
 
-from Cliente import Controler
-from Vendedor import Controler
-from Categoria import Controler
-from Loja import Controler
-from Produto import Controler
+from Cliente import Controler, Model
+from Vendedor import Controler, Model
+from Categoria import Controler, Model
+from Loja import Controler, Model
+from Produto import Controler, Model
 
 
 
 
 
-api = Flask(__name__)
+app = Flask(__name__)
+

@@ -1,4 +1,4 @@
-from Projeto_DSI import *
+from TOCOMFOME import *
 
 
 
@@ -24,6 +24,7 @@ class PRODUTO(Base):
         self.qtdProduto = qtdProduto
         self.valor = valor
         self.id_categoria = id_categoria
+
 
 
 

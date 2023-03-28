@@ -1,4 +1,4 @@
-from Projeto_DSI import *
+from TOCOMFOME import *
 from Model import *
 
 

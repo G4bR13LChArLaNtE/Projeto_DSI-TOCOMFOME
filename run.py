@@ -1,7 +1,7 @@
-from Projeto_DSI import api
+from TOCOMFOME import app
 
 
 
 
 if __name__ == '__main__':
-    api.run(host='0.0.0.0', port=5002, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
