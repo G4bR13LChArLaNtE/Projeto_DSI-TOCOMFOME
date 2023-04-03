@@ -1,5 +1,4 @@
-from tocomfome import app
-
+from App import app
 
 
 

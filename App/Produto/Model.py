@@ -1,4 +1,4 @@
-from tocomfome import *
+from App.db import *
 
 
 
@@ -11,8 +11,8 @@ class PRODUTO(Base):
     nome = Column('NOME', String(255), nullable=False)
     descricao = Column('DESCRICAO', String(255), nullable=True)
     imagem = Column('IMAGEM', String(255), nullable=False)
-    qtdProduto = Column('QTDPRODUTO', Integer, nullable=False)
-    valor = Column('VALOR', Double, nullable=False)
+    qtdProduto = Column('QTD_PRODUTO', Integer, nullable=False)
+    valor = Column('VALOR_PRODUTO', Float, nullable=False)
     id_categoria = Column('ID_CATEGORIA', Integer, nullable=False)
     id_loja = Column('ID_LOJA', Integer, nullable=False)
 
@@ -42,7 +42,10 @@ class Model_Produto():
         for l in result:
             p = {"id": l[0], "nome": l[1], "descricao": l[2], "imagem": l[3], "qtdProduto": l[4], "valor": l[5], "id_categoria": l[6]}
             produtos.append(p)
-        return produtos
+        if len(produtos) == 0:
+            return "Não há produto cadastrado!"
+        else:
+            return produtos
 
     def visualizar_produto(id_produto):
         sql = '''SELECT * FROM PRODUTO'''
@@ -64,9 +67,10 @@ class Model_Produto():
     def adicionar_produto(nome, descricao, imagem, qtdProduto, valor, id_categoria):
         sql  = '''
         INSERT into produto(nome, descricao, imagem, qtdProduto, valor, id_categoria)
-        values( '{}', '{}', '{}', '{}', '{}', '{}');
-        '''.format(nome, descricao, imagem, qtdProduto, valor, id_categoria)
-        inserir_db(sql)
+        values( ?, ?, ?, ?, ?, ?);
+        '''
+        tupla = (nome, descricao, imagem, qtdProduto, valor, id_categoria)
+        inserir_db(sql, tupla)
         return 'Produto adicionado a lista com sucesso!'
 
     def excluir_produto(id_produto):
@@ -82,9 +86,9 @@ class Model_Produto():
         for i in produto:
             if i['id'] == id_produto:
                 sql = '''
-                Delete from produto where id_produto = {};
-                '''.format(id_produto)
-                inserir_db(sql)
+                Delete from produto where id_produto = ?;
+                '''
+                inserir_db(sql, id_produto)
                 return 'Produto excluido com sucesso!'
             elif i['id'] != id_produto:
                 cont = cont + 1
@@ -93,8 +97,9 @@ class Model_Produto():
 
     def atualizar_produto(id_produto, nome, descricao, imagem, qtdProduto, valor, id_categoria):
         sql = '''
-        UPDATE produto SET nome='{}', descricao='{}', imagem='{}', qtdProduto='{}', valor='{}', id_categoria='{}'
-        WHERE id_produto={};
-        '''.format(nome, descricao, imagem, qtdProduto, valor, id_categoria, id_produto)
-        inserir_db(sql)
+        UPDATE produto SET nome=?, descricao=?, imagem=?, qtdProduto=?, valor=?, id_categoria=?
+        WHERE id_produto=?;
+        '''
+        tupla = (nome, descricao, imagem, qtdProduto, valor, id_categoria, id_produto)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'

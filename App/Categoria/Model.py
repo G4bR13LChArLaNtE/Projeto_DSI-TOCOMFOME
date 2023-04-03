@@ -1,4 +1,4 @@
-from tocomfome import *
+from App.db import *
 
 
 
@@ -17,13 +17,6 @@ class Categoria (Base):
 
 
 
-
-
-
-
-
-
-
 # Model da classe Categoria:
 
 
@@ -36,7 +29,10 @@ class Model_Categoria():
         for l in result:
             c = {"id": l[0], "nome": l[1] }
             categorias.append(c)
-        return categorias
+        if len(categorias) == 0:
+            return "Não há categoria cadastrada!"
+        else:
+            return categorias
 
     def visualizar_categoria(id_categoria):
         sql = '''SELECT * FROM CATEGORIA'''
@@ -49,7 +45,10 @@ class Model_Categoria():
         cont = 0
         for c in categoria:
             if c['id'] == id_categoria:
-                return c
+                if c != None:
+                    return c
+                else:
+                    'Não há esse id na lista!'
             elif c['id'] != id_categoria:
                 cont = cont + 1
             if cont == len(categoria):
@@ -58,9 +57,9 @@ class Model_Categoria():
     def adicionar_categoria(nome):
         sql  = '''
         INSERT into categoria(nome)
-        values( '{}' );
-        '''.format(nome)
-        inserir_db(sql)
+        values( ? );
+        '''
+        inserir_db(sql, nome)
         return 'Categoria adicionada a lista com sucesso!'
 
     def excluir_categoria(id_categoria):
@@ -76,9 +75,9 @@ class Model_Categoria():
         for i in categoria:
             if i['id'] == id_categoria:
                 sql = '''
-                Delete from categoria where id_categoria = {};
-                '''.format(id_categoria)
-                inserir_db(sql)
+                Delete from categoria where id_categoria = ?;
+                '''
+                inserir_db(sql, id_categoria)
                 return 'Categoria excluida com sucesso!'
             elif i['id'] != id_categoria:
                 cont = cont + 1
@@ -87,8 +86,9 @@ class Model_Categoria():
 
     def atualizar_categoria(id_categoria, nome):
         sql = '''
-        UPDATE categoria SET nome'{}'
-        WHERE id_categoria={};
-        '''.format(nome, id_categoria)
-        inserir_db(sql)
+        UPDATE categoria SET nome= ?
+        WHERE id_categoria= ?;
+        '''
+        tupla = (nome, id_categoria)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'

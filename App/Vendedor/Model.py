@@ -1,5 +1,4 @@
-from tocomfome import *
-
+from App.db import *
 
 
 # Classe Vendedor:
@@ -24,7 +23,7 @@ class VENDEDOR(Base):
 
 
 
-# Model da classe Cliente:
+# Model da classe Vendedor:
 
 
 class Model_Vendedor():
@@ -37,7 +36,10 @@ class Model_Vendedor():
         for l in result:
             v = {"id": l[0], "nome": l[1], "usuario": l[2], "email": l[3], "data_nasc": l[4] }
             vendedor.append(v)
-        return vendedor
+        if len(vendedor) == 0:
+            return "Não há vendedor cadastrado!"
+        else:
+            return vendedor
 
     def visualizar_vendedor(id_vendedor):
         sql = '''SELECT * FROM VENDEDOR'''
@@ -59,8 +61,9 @@ class Model_Vendedor():
     def adicionar_vendedor(nome, usuario, telefone, email, data_nasc):
         sql  = '''
         INSERT into vendedor(nome, usuario, telefone, email, data_nasc)
-        values( '{}', '{}', '{}', '{}', '{}');
-        '''.format(nome, usuario, telefone, email, data_nasc)
+        values( ?, ?, ?, ?, ?);
+        '''
+        tupla = (nome, usuario, telefone, email, data_nasc)
         inserir_db(sql)
         return 'Vendedor adicionado a lista com sucesso!'
 
@@ -77,9 +80,9 @@ class Model_Vendedor():
         for i in vendedor:
             if i['id'] == id_vendedor:
                 sql = '''
-                Delete from vendedor where cpf = {};
-                '''.format(id_vendedor)
-                inserir_db(sql)
+                Delete from vendedor where cpf = ?;
+                '''
+                inserir_db(sql, id_vendedor)
                 return 'Vendedor excluido com sucesso!'
             elif i['id'] != id_vendedor:
                 cont = cont + 1
@@ -88,8 +91,9 @@ class Model_Vendedor():
 
     def atualizar_vendedor(id_vendedor, usuario, telefone, email):
         sql = '''
-        UPDATE vendedor SET usuario='{}', telefone='{}', email='{}'
-        WHERE cpf={};
-        '''.format(usuario, telefone, email, id_vendedor)
-        inserir_db(sql)
+        UPDATE vendedor SET usuario=?, telefone=?, email=?
+        WHERE cpf=?;
+        '''
+        tupla = (usuario, telefone, email, id_vendedor)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'

@@ -1,4 +1,4 @@
-from tocomfome import *
+from App.db import *
 
 
 
@@ -12,22 +12,24 @@ class Loja(Base):
     descricao = Column('DESCRICAO', String(255))
     logo = Column('LOGO', String(255))
     endereco = Column('ENDERECO', String(255))
-    horario_func = Column('HORARIO_FUNC', Date, nullable=False)
+    horario_func = Column('HORARIO_FUNC', String(10), nullable=False)
     nota = Column('NOTA', Integer)
-    id_vendedor = Column('ID_VENDEDOR', Integer, nullable=False)
+    id_estoque = Column('ID_ESTOQUE', Integer, nullable=False)
+    id_vendedor = Column('CPF_VENDEDOR', Integer, nullable=False)
 
 
-    def __init__(self, nome, descricao, logo, endereco, horario_func, nota, id_vendedor):
+    def __init__(self, nome, descricao, logo, endereco, horario_func, nota, id_estoque, id_vendedor):
         self.nome = nome
         self.descricao = descricao
         self.logo = logo
         self.endereco = endereco
         self.horario_func = horario_func
         self.nota = nota
+        self.id_estoque = id_estoque
         self.id_vendedor = id_vendedor
 
 
-# Model da classe Cliente:
+# Model da classe Loja:
 
 
 class Model_Loja():
@@ -42,9 +44,9 @@ class Model_Loja():
             l = {"id": i[0], "nome": i[1], "descricao": i[2], "logo": i[3], "endereco": i[4],"horario_func": i[5], "nota": i[6]}
             lojas.append(l)
             id_vendedor = i[7]
-            sql = "SELECT * FROM VENDEDOR WHERE CPF = '{}'".format(id_vendedor)
+            sql = "SELECT * FROM VENDEDOR WHERE CPF = ?'"
             v = {}
-            result = consultar_db(sql)
+            result = consultar_db(sql, id_vendedor)
             for i in result:
                 v = {"nome_vendedor" : i[1], "Apelido_vendedor": i[2]}
                 lojas.update(v)
@@ -60,9 +62,9 @@ class Model_Loja():
             loja.append(l)
             id_vendedor = i[7]
             id_vendedor = int(id_vendedor)
-            sql = "SELECT * FROM VENDEDOR WHERE CPF = '{}'".format(id_vendedor)
+            sql = "SELECT * FROM VENDEDOR WHERE CPF = ?"
             v = {}
-            result = consultar_db(sql)
+            result = consultar_db(sql, id_vendedor)
             for i in result:
                 v = {"nome_vendedor" : i[1], "Apelido_vendedor": i[2]}
                 loja.update(v)
@@ -78,9 +80,10 @@ class Model_Loja():
     def adicionar_loja(nome, descricao, logo, endereco, horario_func, nota, id_vendedor):
         sql  = '''
         INSERT into loja(nome, descricao, logo, endereco, horario_func, nota, id_vendedor)
-        values( '{}', '{}', '{}', '{}', '{}', '{}', '{}');
-        '''.format(nome, descricao, logo, endereco, horario_func, nota, id_vendedor)
-        inserir_db(sql)
+        values( ?, ?, ?, ?, ?, ?, ?);
+        '''
+        tupla = (nome, descricao, logo, endereco, horario_func, nota, id_vendedor)
+        inserir_db(sql, tupla)
         return 'Loja adicionadoa a lista com sucesso!'
 
     def excluir_loja(id_loja):
@@ -96,9 +99,9 @@ class Model_Loja():
         for i in loja:
             if i['id'] == id_loja:
                 sql = '''
-                Delete from loja where id_loja = {};
-                '''.format(id_loja)
-                inserir_db(sql)
+                Delete from loja where id_loja = ?;
+                '''
+                inserir_db(sql, id_loja)
                 return 'Loja excluido com sucesso!'
             elif i['id'] != id_loja:
                 cont = cont + 1
@@ -108,8 +111,9 @@ class Model_Loja():
     def atualizar_vendedor(id_loja, nome, descricao, logo, endereco, horario_func):
         sql = '''
         UPDATE vendedor SET
-        nome='{}', descricao='{}', logo='{}', endereco='{}', horario='{}'
-        WHERE id_loja={};
-        '''.format(nome, descricao, logo, endereco, horario_func, id_loja)
-        inserir_db(sql)
+        nome=?, descricao=?, logo=?, endereco=?, horario=?
+        WHERE id_loja=?;
+        '''
+        tupla = (nome, descricao, logo, endereco, horario_func, id_loja)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'

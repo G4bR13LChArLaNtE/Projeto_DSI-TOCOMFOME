@@ -1,6 +1,5 @@
-from tocomfome import *
-
-from tocomfome import Pedido
+from App.db import *
+from App import Pedido
 
 
 # Classe Entregador:
@@ -10,6 +9,7 @@ class ENTREGADOR(Base):
     id_entregador = Column('CPF', Integer, primary_key=True, autoincrement=True)
     nome = Column('NOME',String(255), nullable=False)
     telefone = Column('TELEFONE', String(15), nullable=False)
+    id_pedido = Column('ID_PEDIDO', Integer, nullable=False)
 
 
     def __init__(self, id_entregador, nome, telefone):

@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from sqlalchemy import Column, Integer, String, Date, Double
+from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -12,12 +12,6 @@ from dotenv import load_dotenv
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
-
-senha = os.environ.get('PASS')
-
-
-senha = os.environ.get('PASS')
-
 
 server = 'CHARLANTEPC\SQLEXPRESS' # to specify an alternate port
 database = 'APP_TOCOMFOME'
@@ -39,19 +33,21 @@ Base = declarative_base(conectar_db())
 
 # Métodos do banco de dados:
 
-def inserir_db(sql):
+def inserir_db(sql, lista):
     con = conectar_db()
     cur = con.cursor()
     try:
-        cur.execute(sql)
+        cur.execute(sql, lista)
         con.commit()
     except (Exception, pyodbc.DatabaseError) as error:
         print("Error: %s" % error)
         con.rollback()
         cur.close()
+        con.close()
         return 1
     finally:
         cur.close()
+        con.close()
 
 def consultar_db(sql):
     con = conectar_db()
@@ -62,27 +58,11 @@ def consultar_db(sql):
         registros = []
         for rec in recset:
             registros.append(rec)
-        con.close()
         return registros
     except (Exception, pyodbc.DatabaseError) as error:
         print("Error: %s" % error)
         con.rollback()
-        cur.close()
         return 1
     finally:
         cur.close()
-
-
-
-import Categoria.Controler
-import Cliente.Controler
-import Entregador.Controler
-import Estoque.Controler
-import Loja.Controler
-import Pedido.Controler
-import Produto.Controler
-import Vendedor.Controler
-
-
-app = Flask(__name__)
-
+        con.close()

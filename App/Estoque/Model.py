@@ -1,4 +1,4 @@
-from tocomfome import *
+from App.db import *
 
 
 
@@ -31,7 +31,10 @@ class Model_Estoque():
         for l in result:
             i = {"id": l[0], "produto": l[1], "qtdProduto": l[2], "idLoja": l[3] }
             itens.append(i)
-        return itens
+        if len(itens) == 0:
+            return "Não há item cadastrado!"
+        else:
+            return itens
 
     def visualizar_item(item_id):
         sql = '''SELECT * FROM ESTOQUE'''
@@ -53,9 +56,10 @@ class Model_Estoque():
     def adicionar_item(id_loja, produto, qtdProduto):
         sql  = '''
         INSERT into estoque(produto, qtdProduto)
-        values( '{}', '{}') WHERE ID_LOJA = '{}';
-        '''.format(produto, qtdProduto, id_loja)
-        inserir_db(sql)
+        values( ?, ?) WHERE ID_LOJA = ?;
+        '''
+        tupla = (produto, qtdProduto, id_loja)
+        inserir_db(sql, tupla)
         return 'Item adicionado a lista com sucesso!'
 
     def excluir_item(item_id):
@@ -71,9 +75,9 @@ class Model_Estoque():
         for i in itens:
             if i['id'] == item_id:
                 sql = '''
-                Delete from estoque where id = {};
-                '''.format(item_id)
-                inserir_db(sql)
+                Delete from estoque where id = ?;
+                '''
+                inserir_db(sql, item_id)
                 return 'Item excluido com sucesso!'
             elif i['id'] != item_id:
                 cont = cont + 1
@@ -82,8 +86,9 @@ class Model_Estoque():
 
     def atualizar_item(item_id, produto, qtdProduto):
         sql = '''
-        UPDATE estoque SET produto = '{}', qtdProduto='{}' 
-        WHERE id={};
-        '''.format(produto, qtdProduto, item_id)
-        inserir_db(sql)
+        UPDATE estoque SET produto = ?, qtdProduto= ?
+        WHERE id= ?;
+        '''
+        tupla = (produto, qtdProduto, item_id)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'

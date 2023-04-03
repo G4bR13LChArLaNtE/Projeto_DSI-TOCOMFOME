@@ -1,4 +1,4 @@
-from tocomfome import *
+from App.db import *
 
 
 
@@ -12,7 +12,7 @@ class CLIENTE(Base):
     endereco = Column('ENDERECO', String(255), nullable=False)
     telefone = Column('TELEFONE', String(15), nullable=False)
     email = Column('EMAIL',String(100), nullable=False)
-    data_nasc = Column('DATA_NASC', Date, nullable=False)
+    data_nasc = Column('DATA_NASC', String(100), nullable=False)
 
 
     def __init__(self, nome, usuario, endereco, telefone, email, data_nasc):
@@ -37,7 +37,10 @@ class Model_Cliente():
         for l in result:
             c = {"id": l[0], "nome": l[1], "usuario": l[2], "endereco": l[3], "email": l[4], "data_nasc": l[5] }
             clientes.append(c)
-        return clientes
+        if len(clientes) == 0:
+            return "Não há clientes ainda na lista."
+        else:
+            return clientes
 
     def visualizar_cliente(id_cliente):
         sql = '''SELECT * FROM CLIENTE'''
@@ -59,9 +62,10 @@ class Model_Cliente():
     def adicionar_cliente(nome, usuario, endereco, telefone, email, data_nasc):
         sql  = '''
         INSERT into CLIENTE(nome, usuario, endereco, telefone, email, data_nasc)
-        values( '{}', '{}', '{}', '{}', '{}', '{}');
-        '''.format(nome, usuario, endereco, telefone, email, data_nasc)
-        inserir_db(sql)
+        values( ?, ?, ?, ?, ?, ?);
+        '''
+        tupla = (nome, usuario, endereco, telefone, email, data_nasc)
+        inserir_db(sql, tupla )
         return 'Cliente adicionado a lista com sucesso!'
 
     def excluir_cliente(id_cliente):
@@ -77,9 +81,9 @@ class Model_Cliente():
         for i in cliente:
             if i['id'] == id_cliente:
                 sql = '''
-                Delete from cliente where cpf = {};
-                '''.format(id_cliente)
-                inserir_db(sql)
+                Delete from cliente where cpf = ?;
+                '''
+                inserir_db(sql, id_cliente)
                 return 'Cliente excluido com sucesso!'
             elif i['id'] != id_cliente:
                 cont = cont + 1
@@ -88,10 +92,11 @@ class Model_Cliente():
 
     def atualizar_cliente(id_cliente, usuario, endereco, telefone, email):
         sql = '''
-        UPDATE cliente SET usuario='{}', endereço='{}', telefone='{}', email='{}'
-        WHERE cpf={};
-        '''.format(usuario, endereco, telefone, email, id_cliente)
-        inserir_db(sql)
+        UPDATE cliente SET usuario=?, endereco=?, telefone=?, email=?
+        WHERE cpf=?;
+        '''
+        tupla = (usuario, endereco, telefone, email, id_cliente)
+        inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'
 
     def adicionar_nota(id_loja, nota):
@@ -114,8 +119,9 @@ class Model_Cliente():
             if cont == len(loja):
                 return 'Esse id não pertence a lista de lojas!'
         sql = '''
-        UPDATE loja SET nota='{}'
-        WHERE cpf={};
-        '''.format(novaNota, id_loja)
-        inserir_db(sql)
+        UPDATE loja SET nota=?
+        WHERE cpf=?;
+        '''
+        tupla = (novaNota, id_loja)
+        inserir_db(sql, tupla)
         return 'Obrigado pela sua avaliação!'
