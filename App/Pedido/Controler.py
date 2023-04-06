@@ -1,4 +1,4 @@
-from Model import Model_Pedido
+from .Model import Model_Pedido
 
 from flask import Blueprint, jsonify
 

@@ -1,4 +1,4 @@
-from Model import Model_Cliente
+from .Model import Model_Cliente
 
 
 from flask import Blueprint, jsonify

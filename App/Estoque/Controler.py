@@ -1,4 +1,4 @@
-from Model import Model_Estoque
+from .Model import Model_Estoque
 
 
 from flask import Blueprint, jsonify

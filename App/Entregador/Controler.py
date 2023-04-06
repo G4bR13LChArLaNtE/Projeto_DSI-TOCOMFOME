@@ -1,4 +1,4 @@
-from Model import Model_Entregador
+from .Model import Model_Entregador
 
 
 from flask import Blueprint, jsonify
