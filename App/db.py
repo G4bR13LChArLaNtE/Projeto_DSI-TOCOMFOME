@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from sqlalchemy import Column, Integer, String, Date, Float
+from sqlalchemy import Column, Integer, String, Date, Float, VARBINARY
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -42,8 +42,6 @@ def inserir_db(sql, lista):
     except (Exception, pyodbc.DatabaseError) as error:
         print("Error: %s" % error)
         con.rollback()
-        cur.close()
-        con.close()
         return 1
     finally:
         cur.close()

@@ -24,7 +24,7 @@ def categoria(id_categoria):
     return jsonify(Model_Categoria.visualizar_categoria(id_categoria))
 
 
-@categoria_app.route('/categoria/atualizar/<int:id_categoria>/<string:nome>/', methods=['PUT'])
+@categoria_app.route('/categoria/atualizar/<int:id_categoria>/<string:nome>', methods=['PUT'])
 def categoriaAtualizar(id_categoria, nome):
     return jsonify(Model_Categoria.atualizar_categoria(id_categoria, nome))
 

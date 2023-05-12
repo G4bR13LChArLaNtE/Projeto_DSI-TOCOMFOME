@@ -8,24 +8,23 @@ from App.db import *
 class Loja(Base):
     __tablename__ = 'LOJA'
     id = Column('ID_LOJA', Integer, primary_key=True, autoincrement=True)
-    nome = Column('NOME',String(255), nullable=False)
-    descricao = Column('DESCRICAO', String(255))
-    logo = Column('LOGO', String(255))
+    id_vendedor = Column('CPF_VENDEDOR', Integer, nullable=False)
+    nome = Column('NOME_LOJA',String(255), nullable=False)
+    descricao = Column('DESCRICAO', String(500))
+    logo = Column('LOGO', VARBINARY(max))
     endereco = Column('ENDERECO', String(255))
     horario_func = Column('HORARIO_FUNC', String(10), nullable=False)
     nota = Column('NOTA', Integer)
-    id_estoque = Column('ID_ESTOQUE', Integer, nullable=False)
-    id_vendedor = Column('CPF_VENDEDOR', Integer, nullable=False)
+    
 
 
-    def __init__(self, nome, descricao, logo, endereco, horario_func, nota, id_estoque, id_vendedor):
+    def __init__(self, nome, descricao, logo, endereco, horario_func, nota, id_vendedor):
         self.nome = nome
         self.descricao = descricao
         self.logo = logo
         self.endereco = endereco
         self.horario_func = horario_func
         self.nota = nota
-        self.id_estoque = id_estoque
         self.id_vendedor = id_vendedor
 
 
@@ -44,7 +43,7 @@ class Model_Loja():
             l = {"id": i[0], "nome": i[1], "descricao": i[2], "logo": i[3], "endereco": i[4],"horario_func": i[5], "nota": i[6]}
             lojas.append(l)
             id_vendedor = i[7]
-            sql = "SELECT * FROM VENDEDOR WHERE CPF = ?'"
+            sql = "SELECT * FROM VENDEDOR WHERE CPF_VENDEDOR = ?"
             v = {}
             result = consultar_db(sql, id_vendedor)
             for i in result:
@@ -108,12 +107,64 @@ class Model_Loja():
             if cont == len(loja):
                 return 'Esse id não pertence a lista de lojas!'
 
-    def atualizar_vendedor(id_loja, nome, descricao, logo, endereco, horario_func):
+    def atualizar_nome(id_loja, nome):
         sql = '''
-        UPDATE vendedor SET
-        nome=?, descricao=?, logo=?, endereco=?, horario=?
+        UPDATE loja SET
+        nome=?
         WHERE id_loja=?;
         '''
-        tupla = (nome, descricao, logo, endereco, horario_func, id_loja)
+        tupla = (nome, id_loja)
         inserir_db(sql, tupla)
         return 'Atualizado com sucesso!'
+
+    def atualizar_nome(id_loja, nome):
+        sql = '''
+        UPDATE loja SET
+        nome=?
+        WHERE id_loja=?;
+        '''
+        tupla = (nome, id_loja)
+        inserir_db(sql, tupla)
+        return 'Atualizado com sucesso!'
+
+    def atualizar_descricao(id_loja, descricao):
+        sql = '''
+        UPDATE loja SET
+        descricao=?
+        WHERE id_loja=?;
+        '''
+        tupla = (descricao, id_loja)
+        inserir_db(sql, tupla)
+        return 'Atualizado com sucesso!'
+
+    def atualizar_logo(id_loja, logo):
+        sql = '''
+        UPDATE loja SET
+        logo=?
+        WHERE id_loja=?;
+        '''
+        tupla = (logo, id_loja)
+        inserir_db(sql, tupla)
+        return 'Atualizado com sucesso!'
+
+    def atualizar_endereco(id_loja, endereco):
+        sql = '''
+        UPDATE loja SET
+        endereco=?
+        WHERE id_loja=?;
+        '''
+        tupla = (endereco, id_loja)
+        inserir_db(sql, tupla)
+        return 'Atualizado com sucesso!'
+
+    def atualizar_horario(id_loja, horario):
+        sql = '''
+        UPDATE loja SET
+        horario_func=?
+        WHERE id_loja=?;
+        '''
+        tupla = (horario, id_loja)
+        inserir_db(sql, tupla)
+        return 'Atualizado com sucesso!'
+
+

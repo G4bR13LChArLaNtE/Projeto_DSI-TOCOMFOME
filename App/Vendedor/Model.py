@@ -11,7 +11,6 @@ class VENDEDOR(Base):
     telefone = Column('TELEFONE', String(15), nullable=False)
     email = Column('EMAIL',String(100), nullable=False)
     data_nasc = Column('DATA_NASC', Date, nullable=False)
-    idLoja = Column('ID_LOJA', Integer, nullable=False)
 
 
     def __init__(self, nome, usuario, telefone, email, data_nasc):
@@ -64,7 +63,7 @@ class Model_Vendedor():
         values( ?, ?, ?, ?, ?);
         '''
         tupla = (nome, usuario, telefone, email, data_nasc)
-        inserir_db(sql)
+        inserir_db(sql, tupla)
         return 'Vendedor adicionado a lista com sucesso!'
 
     def excluir_vendedor(id_vendedor):
