@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from sqlalchemy import Column, Integer, String, Date, Float, VARBINARY
+from sqlalchemy import Column, Integer, String, Date, Float, VARBINARY, Array
 from sqlalchemy.ext.declarative import declarative_base
 
 

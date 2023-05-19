@@ -7,34 +7,35 @@ from App.db import *
 class PEDIDO(Base):
     __tablename__ = 'PEDIDO'
     id = Column('ID_PEDIDO', Integer, primary_key=True, autoincrement=True)
-    id_produto = Column('ID_PRODUTO', Integer, nullable=False)
-    #nome_produto = Column('NOME_PRODUTO', String(40), nullable=True)
-    valor_produto = Column('VALOR_PRODUTO', Float, nullable=False)
-    total = Column('TOTAL', Float, nullable=False)
-    status_pedido = Column('NOME_PRODUTO', String(20), nullable=True)
-    entregue = Column('ENTREGUE', String(10), nullable=True)
+    total = Column('TOTAL', Float, nullable=True)
+    status_pedido = Column('STATUS', String(20), nullable=False)
     data_pedido = Column('DATA_PEDIDO', Date, nullable=False)
     cpf_cliente = Column('CPF_CLIENTE', Integer, nullable=False)
-    observacao = Column('OBSERVACAO', String(40), nullable=True)
+    observacao = Column('OBSERVACAO', String(400), nullable=True)
     pagamento  = Column('PAGAMENTO', String(20), nullable=True)
-    desconto = Column('DESCONTO', Float, nullable=False)
-    
-    
-    
+    desconto = Column('DESCONTO', Float, nullable=True)
+    id_entregador = Column('ID_ENTREGADOR', Integer, nullable=False)
 
-    def __init__(self, id, id_produto, nome_produto, valor_produto, total, status_pedido, entregue, data_pedido, cpf_cliente, observacao, pagamento, desconto):
-        self.id = id
-        self.id_produto = id_produto
-        self.nome_produto = nome_produto
-        self.valor_produto = valor_produto
-        self.total = total
+    def __init__(self, total, status_pedido, data_pedido, cpf_cliente, observacao, pagamento, desconto, id_entregador):
+        total = 0
+        self.__total = total
         self.status_pedido = status_pedido
-        self.entregue = entregue
         self.data_pedido = data_pedido
         self.cpf_cliente = cpf_cliente
         self.observacao = observacao
         self.pagamento = pagamento
+        desconto = 0
         self.desconto = desconto
+        self.id_entregador = id_entregador
+
+    def get_total(self):
+        return self.__total
+
+    def set_total(self, valor_produtos, desconto):
+        self.__total = 0
+        for v in valor_produtos:
+            self.__total += v
+        self.__total = self.__total * desconto
 
 
 # Model da classe Pedido:
@@ -43,34 +44,22 @@ class PEDIDO(Base):
 class Model_Pedido():
 
     def visualizar_pedidos():
-        sql = '''SELECT * FROM PEDIDO'''
+        sql1 = '''SELECT * FROM PEDIDO'''
         pedidos = []
         i = {}
-        result = consultar_db(sql),
-        for l in result:
-            i = {"id": l[0], "id_produto": l[1], "nome_produto": l[2], "valor_produto": l[3], "total": l[4], "status_pedido": l[5], "entregue": l[6], "data_pedido": l[7], "cpf_cliente": l[8], "observacao": l[9], "pagamento": l[10], "desconto": l[11] }
+        result1 = consultar_db(sql1),
+        for l in result1:
+            i = {"id": l[0], "total": l[1], "status_pedido": l[2], "data_pedido": l[3], "cpf_cliente": l[4], "observacao": l[5], "pagamento": l[6], "desconto": l[7], "id_entregador": l[8] }
             pedidos.append(i)
         if len(pedidos) == 0:
             return "Não há pedido cadastrado!"
         else:
+            sql2 = "SELECT * FROM TRANSACAO"
+            result2 = consultar_db(sql2)
+            for m in result2:
+                m = {"id_transacao": l[0], "id_pedido": l[1], "id_produto": l[2], "nome_produto": l[3], "valor_produto": l[4]}
+            pedidos["transacoes"] = m
             return pedidos
-
-    def visualizar_pedido(pedido_id):
-        sql = '''SELECT * FROM ESTOQUE'''
-        pedidos = []
-        i = {}
-        result = consultar_db(sql)
-        for l in result:
-            i = {"id": l[0], "id_produto": l[1], "nome_produto": l[2], "valor_produto": l[3], "total": l[4], "status_pedido": l[5], "entregue": l[6], "data_pedido": l[7], "cpf_cliente": l[8], "observacao": l[9], "pagamento": l[10], "desconto": l[11] }
-            pedidos.append(i)
-        cont = 0
-        for i in pedidos:
-            if i['id'] == pedido_id:
-                return i
-            elif i['id'] != pedido_id:
-                cont = cont + 1
-            if cont == len(pedidos):
-                return 'Esse id não pertence a lista de pedidos!'
 
     def excluir_item(pedido_id):
         sql = '''SELECT * FROM PEDIDO;'''
@@ -78,7 +67,7 @@ class Model_Pedido():
         i = {}
         result = consultar_db(sql)
         for l in result:
-            i = {"id": l[0], "id_produto": l[1], "nome_produto": l[2], "valor_produto": l[3], "total": l[4], "status_pedido": l[5], "entregue": l[6], "data_pedido": l[7], "cpf_cliente": l[8], "observacao": l[9], "pagamento": l[10], "desconto": l[11] }
+            i = {"id": l[0], "total": l[1], "status_pedido": l[2], "data_pedido": l[3], "cpf_cliente": l[4], "observacao": l[5], "pagamento": l[6], "desconto": l[7], "id_entregador": l[8] }
             pedidos.append(i)
         pedido_id = int(pedido_id)
         cont = 0
@@ -86,20 +75,20 @@ class Model_Pedido():
             if i['id'] == pedido_id:
                 sql = '''
                 Delete from pedido where id = ?;
+                Delete from transacao where id_pedido = ?;
                 '''
-                inserir_db(sql, pedido_id)
-                return 'Item excluido com sucesso!'
+                inserir_db(sql, pedido_id, pedido_id)
+                return 'Pedido excluido com sucesso!'
             elif i['id'] != pedido_id:
                 cont = cont + 1
             if cont == len(pedidos):
                 return 'Esse id não pertence a lista de pedidos!'
-    
-    def buscar_pedido(self, pedido_id):
-        for pedido in self.pedidos:
-            if pedido.id == pedido_id:
-                return pedido
-        return None
-    
-    # A classe PedidoController permite adicionar novos pedidos e
-    # buscar pedidos pelo ID
 
+    def adicionar_pedido(status_pedido, data_pedido, cpf_cliente, observacao, pagamento, desconto, id_entregador):
+        sql  = '''
+        INSERT into pedido(status_pedido, data_pedido, cpf_cliente, observacao, pagamento, desconto, id_entregador)
+        values( ?, ?, ?, ?, ?, ?, ?);
+        '''
+        tupla = (status_pedido, data_pedido, cpf_cliente, observacao, pagamento, desconto, id_entregador)
+        inserir_db(sql, tupla)
+        return 'Pedido adicionado a lista com sucesso!'
